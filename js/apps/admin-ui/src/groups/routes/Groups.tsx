@@ -27,10 +27,25 @@ export const OrgGroupsRoute: AppRouteObject = {
   },
 };
 
+export const GroupsWithIdRoute: AppRouteObject = {
+  ...GroupsRoute,
+  path: "/:realm/groups/:id",
+};
+
+export const OrgGroupsWithIdRoute: AppRouteObject = {
+  ...OrgGroupsRoute,
+  path: "/:realm/organizations/:orgId/groups/:id",
+};
+
 export const toGroups = (params: GroupsParams): Partial<Path> => {
-  const path = params.orgId ? OrgGroupsRoute.path : GroupsRoute.path;
+  const routes = {
+    orgGroups: params.id ? OrgGroupsWithIdRoute.path : OrgGroupsRoute.path,
+    realmGroups: params.id ? GroupsWithIdRoute.path : GroupsRoute.path,
+  };
+
+  const path = params.orgId ? routes.orgGroups : routes.realmGroups;
 
   return {
-    pathname: generatePath(path, { ...params, "*": params.id }),
+    pathname: generatePath(path, params),
   };
 };
