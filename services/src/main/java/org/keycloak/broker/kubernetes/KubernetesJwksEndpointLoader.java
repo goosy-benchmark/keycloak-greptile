@@ -1,7 +1,6 @@
 package org.keycloak.broker.kubernetes;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.keycloak.crypto.PublicKeysWrapper;
@@ -47,9 +46,6 @@ public class KubernetesJwksEndpointLoader implements PublicKeyLoader {
             wellKnownReqest.auth(token);
         }
         String jwksUri = wellKnownReqest.asJson(OIDCConfigurationRepresentation.class).getJwksUri();
-        if (jwksUri == null) {
-            throw new IOException("OIDC discovery document from " + wellKnownEndpoint + " did not include a jwks_uri");
-        }
 
         SimpleHttpRequest jwksRequest = simpleHttp.doGet(jwksUri).header(HttpHeaders.ACCEPT, "application/jwk-set+json");
         if (token != null) {
